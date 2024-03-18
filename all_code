@@ -1,0 +1,466 @@
+setwd('~/anth_centre') 
+library(tidyverse)
+
+export <- read.csv('./all_loc.csv')  #this file is an export of the NOW database# 
+ 
+# cut all_loc to columns need # 
+export <- export %>% dplyr::select(-c(3:4, 7, 9:11, 13:19, 21:46)) 
+export1<-export
+##remove antartica, netherlands antilles, north korea # 
+export <- subset(export, COUNTRY != 'Antarctica') 
+export <- subset(export, COUNTRY !='Netherlands Antilles')
+export <- subset(export, COUNTRY !='North Korea')
+
+# find hominini sites # 
+species <- read.csv('./with_species.csv')
+homin <- species %>% filter(species$SUBFAMILY == 'Hominini')
+homin <- homin %>% select(-c(3:4, 7, 9:11, 13:19, 21:33, 42:102)) 
+homin <- subset(homin, COUNTRY != 'Antarctica') 
+homin <- subset(homin, COUNTRY !='Netherlands Antilles')
+homin <- subset(homin, COUNTRY !='North Korea')
+
+#annotate export so know which locs have hominini# this is a very ugly method but it does work# 
+library(dplyr)
+homnum <- homin %>% dplyr::select(1)
+export<-export%>% mutate(homo = case_when(LIDNUM =='28260'| LIDNUM =='26959'| LIDNUM =='28004'| LIDNUM =='28331'| LIDNUM =='28332'| LIDNUM =='23806'
+| LIDNUM =='28322'| LIDNUM =='24374'
+| LIDNUM =='26977'| LIDNUM =='23249'| LIDNUM =='24397'| LIDNUM =='22331'| LIDNUM =='22333'| LIDNUM =='22034'| LIDNUM =='27998'| LIDNUM =='23668'
+| LIDNUM =='29264'| LIDNUM =='28653'| LIDNUM =='26600'| LIDNUM =='29271'| LIDNUM =='29266'| LIDNUM =='24407'| LIDNUM =='27573'| LIDNUM =='24279'
+| LIDNUM =='28096'| LIDNUM =='23201'| LIDNUM =='28339'| LIDNUM =='28339'| LIDNUM =='28339'| LIDNUM =='29112'| LIDNUM =='24772'| LIDNUM =='28672'
+| LIDNUM =='28673'| LIDNUM =='28674'| LIDNUM =='28094'| LIDNUM =='24933'| LIDNUM =='29301'| LIDNUM =='29309'| LIDNUM =='29283'| LIDNUM =='23804'
+| LIDNUM =='28210'| LIDNUM =='23931'| LIDNUM =='23931'| LIDNUM =='24086'| LIDNUM =='24085'| LIDNUM =='23882'| LIDNUM =='23882'| LIDNUM =='24147'
+| LIDNUM =='24280'| LIDNUM =='22075'| LIDNUM =='24261'| LIDNUM =='28328'| LIDNUM =='29295'| LIDNUM =='29300'| LIDNUM =='23671'| LIDNUM =='27574'
+| LIDNUM =='28335'| LIDNUM =='24648'| LIDNUM =='21050'| LIDNUM =='27941'| LIDNUM =='27941'| LIDNUM =='29221'| LIDNUM =='28091'| LIDNUM =='26867'
+| LIDNUM =='29284'| LIDNUM =='28092'| LIDNUM =='24460'| LIDNUM =='28652'| LIDNUM =='29272'| LIDNUM =='29042'| LIDNUM =='26884'| LIDNUM =='26885'
+| LIDNUM =='26887'| LIDNUM =='26866'| LIDNUM =='24084'| LIDNUM =='29181'| LIDNUM =='29302'| LIDNUM =='27242'| LIDNUM =='24045'| LIDNUM =='24046'
+| LIDNUM =='28321'| LIDNUM =='24088'| LIDNUM =='26816'| LIDNUM =='27120'| LIDNUM =='23267'| LIDNUM =='29263'| LIDNUM =='28340'| LIDNUM =='28343'
+| LIDNUM =='28344'| LIDNUM =='28346'| LIDNUM =='28346'| LIDNUM =='28347'| LIDNUM =='28347'| LIDNUM =='28064'| LIDNUM =='29246'| LIDNUM =='29296'
+| LIDNUM =='29234'| LIDNUM =='23672'| LIDNUM =='28349'| LIDNUM =='22918'| LIDNUM =='28359'| LIDNUM =='26906'| LIDNUM =='23803'| LIDNUM =='28362'
+| LIDNUM =='28362'| LIDNUM =='28363'| LIDNUM =='28363'| LIDNUM =='28363'| LIDNUM =='28364'| LIDNUM =='24150'| LIDNUM =='24042'| LIDNUM =='28455'
+| LIDNUM =='28365'| LIDNUM =='23669'| LIDNUM =='24926'| LIDNUM =='23247'| LIDNUM =='23247'| LIDNUM =='28369'| LIDNUM =='28369'| LIDNUM =='28372'
+| LIDNUM =='28372'| LIDNUM =='28373'| LIDNUM =='21261'| LIDNUM =='28761'| LIDNUM =='23871'| LIDNUM =='27997'| LIDNUM =='24015'| LIDNUM =='28763'
+| LIDNUM =='20358'| LIDNUM =='20359'| LIDNUM =='20361'| LIDNUM =='20371'| LIDNUM =='20365'| LIDNUM =='20366'| LIDNUM =='20377'| LIDNUM =='20379'
+| LIDNUM =='20354'| LIDNUM =='20355'| LIDNUM =='20382'| LIDNUM =='24148'| LIDNUM =='24148'| LIDNUM =='27570'| LIDNUM =='27254'| LIDNUM =='27272'
+| LIDNUM =='29202'| LIDNUM =='29290'| LIDNUM =='29291'| LIDNUM =='28376'| LIDNUM =='28376'| LIDNUM =='28378'| LIDNUM =='28379'| LIDNUM =='28380'
+| LIDNUM =='28382'| LIDNUM =='28382'| LIDNUM =='28383'| LIDNUM =='28386'| LIDNUM =='24127'| LIDNUM =='24128'| LIDNUM =='29248'| LIDNUM =='29287'
+| LIDNUM =='24138'| LIDNUM =='29265'| LIDNUM =='23802'| LIDNUM =='29038'| LIDNUM =='29279'| LIDNUM =='24391'| LIDNUM =='28762'| LIDNUM =='23868'
+| LIDNUM =='26930'| LIDNUM =='29178'| LIDNUM =='27233'| LIDNUM =='27571'| LIDNUM =='24437'| LIDNUM =='29306'| LIDNUM =='28414'| LIDNUM =='24061'
+| LIDNUM =='29305'| LIDNUM =='28392'| LIDNUM =='28393'| LIDNUM =='29298'| LIDNUM =='27010'| LIDNUM =='28397'| LIDNUM =='27965'| LIDNUM =='28265'
+| LIDNUM =='22026'| LIDNUM =='24151'| LIDNUM =='27253'| LIDNUM =='27572'| LIDNUM =='23858'| LIDNUM =='23858'| LIDNUM =='28327'| LIDNUM =='28327'
+| LIDNUM =='28327'| LIDNUM =='26964'| LIDNUM =='27986'| LIDNUM =='24194'| LIDNUM =='24099'| LIDNUM =='28272'| LIDNUM =='24098'| LIDNUM =='28261'
+| LIDNUM =='24436'| LIDNUM =='27009'| LIDNUM =='24455'| LIDNUM =='24154'| LIDNUM =='24206'| LIDNUM =='29275'| LIDNUM =='22027'| LIDNUM =='24178'
+| LIDNUM =='28337'| LIDNUM =='22209'| LIDNUM =='24097'| LIDNUM =='24155'| LIDNUM =='23687'| LIDNUM =='23686'| LIDNUM =='23686'| LIDNUM =='23685'
+| LIDNUM =='23685'| LIDNUM =='23685'| LIDNUM =='23684'| LIDNUM =='23684'| LIDNUM =='23684'| LIDNUM =='23683'| LIDNUM =='23683'| LIDNUM =='23682'
+| LIDNUM =='23682'| LIDNUM =='23682'| LIDNUM =='28400'| LIDNUM =='23670'| LIDNUM =='28404'| LIDNUM =='28405'| LIDNUM =='28676'| LIDNUM =='23867'
+| LIDNUM =='23867'| LIDNUM =='23867'| LIDNUM =='26933'| LIDNUM =='22030'| LIDNUM =='24208'| LIDNUM =='26913'| LIDNUM =='26913'| LIDNUM =='26914'
+| LIDNUM =='26914'| LIDNUM =='26915'| LIDNUM =='26915'| LIDNUM =='26916'| LIDNUM =='27847'| LIDNUM =='24067'| LIDNUM =='24040'| LIDNUM =='29274'
+| LIDNUM =='23865'| LIDNUM =='24044'| LIDNUM =='24041'| LIDNUM =='24043'| LIDNUM =='26962'| LIDNUM =='24047'| LIDNUM =='29289'| LIDNUM =='29307'
+| LIDNUM =='26963'| LIDNUM =='24101'| LIDNUM =='23667'| LIDNUM =='24149'| LIDNUM =='26917'| LIDNUM =='29362'| LIDNUM =='29187'| LIDNUM =='27464'
+| LIDNUM =='28681'| LIDNUM =='28032'| LIDNUM =='24153'| LIDNUM =='23225'| LIDNUM =='28323'| LIDNUM =='29304'| LIDNUM =='29216'| LIDNUM =='29308'
+| LIDNUM =='29217'| LIDNUM =='24110'| LIDNUM =='29278'| LIDNUM =='23200'| LIDNUM =='24554'| LIDNUM =='29288'| LIDNUM =='29039'| LIDNUM =='24094'
+| LIDNUM =='24089'| LIDNUM =='24090'| LIDNUM =='24096'~ 'Y', 
+  LIDNUM !='28260'| LIDNUM !='26959'| LIDNUM !='28004'| LIDNUM !='28331'| LIDNUM !='28332'| LIDNUM !='23806'| LIDNUM !='28322'| LIDNUM !='24374'
+| LIDNUM !='26977'| LIDNUM !='23249'| LIDNUM !='24397'| LIDNUM !='22331'| LIDNUM !='22333'| LIDNUM !='22034'| LIDNUM !='27998'| LIDNUM !='23668'
+| LIDNUM !='29264'| LIDNUM !='28653'| LIDNUM !='26600'| LIDNUM !='29271'| LIDNUM !='29266'| LIDNUM !='24407'| LIDNUM !='27573'| LIDNUM !='24279'
+| LIDNUM !='28096'| LIDNUM !='23201'| LIDNUM !='28339'| LIDNUM !='28339'| LIDNUM !='28339'| LIDNUM !='29112'| LIDNUM !='24772'| LIDNUM !='28672'
+| LIDNUM !='28673'| LIDNUM !='28674'| LIDNUM !='28094'| LIDNUM !='24933'| LIDNUM !='29301'| LIDNUM !='29309'| LIDNUM !='29283'| LIDNUM !='23804'
+| LIDNUM !='28210'| LIDNUM !='23931'| LIDNUM !='23931'| LIDNUM !='24086'| LIDNUM !='24085'| LIDNUM !='23882'| LIDNUM !='23882'| LIDNUM !='24147'
+| LIDNUM !='24280'| LIDNUM !='22075'| LIDNUM !='24261'| LIDNUM !='28328'| LIDNUM !='29295'| LIDNUM !='29300'| LIDNUM !='23671'| LIDNUM !='27574'
+| LIDNUM !='28335'| LIDNUM !='24648'| LIDNUM !='21050'| LIDNUM !='27941'| LIDNUM !='27941'| LIDNUM !='29221'| LIDNUM !='28091'| LIDNUM !='26867'
+| LIDNUM !='29284'| LIDNUM !='28092'| LIDNUM !='24460'| LIDNUM !='28652'| LIDNUM !='29272'| LIDNUM !='29042'| LIDNUM !='26884'| LIDNUM !='26885'
+| LIDNUM !='26887'| LIDNUM !='26866'| LIDNUM !='24084'| LIDNUM !='29181'| LIDNUM !='29302'| LIDNUM !='27242'| LIDNUM !='24045'| LIDNUM !='24046'
+| LIDNUM !='28321'| LIDNUM !='24088'| LIDNUM !='26816'| LIDNUM !='27120'| LIDNUM !='23267'| LIDNUM !='29263'| LIDNUM !='28340'| LIDNUM !='28343'
+| LIDNUM !='28344'| LIDNUM !='28346'| LIDNUM !='28346'| LIDNUM !='28347'| LIDNUM !='28347'| LIDNUM !='28064'| LIDNUM !='29246'| LIDNUM !='29296'
+| LIDNUM !='29234'| LIDNUM !='23672'| LIDNUM !='28349'| LIDNUM !='22918'| LIDNUM !='28359'| LIDNUM !='26906'| LIDNUM !='23803'| LIDNUM !='28362'
+| LIDNUM !='28362'| LIDNUM !='28363'| LIDNUM !='28363'| LIDNUM !='28363'| LIDNUM !='28364'| LIDNUM !='24150'| LIDNUM !='24042'| LIDNUM !='28455'
+| LIDNUM !='28365'| LIDNUM !='23669'| LIDNUM !='24926'| LIDNUM !='23247'| LIDNUM !='23247'| LIDNUM !='28369'| LIDNUM !='28369'| LIDNUM !='28372'
+| LIDNUM !='28372'| LIDNUM !='28373'| LIDNUM !='21261'| LIDNUM !='28761'| LIDNUM !='23871'| LIDNUM !='27997'| LIDNUM !='24015'| LIDNUM !='28763'
+| LIDNUM !='20358'| LIDNUM !='20359'| LIDNUM !='20361'| LIDNUM !='20371'| LIDNUM !='20365'| LIDNUM !='20366'| LIDNUM !='20377'| LIDNUM !='20379'
+| LIDNUM !='20354'| LIDNUM !='20355'| LIDNUM !='20382'| LIDNUM !='24148'| LIDNUM !='24148'| LIDNUM !='27570'| LIDNUM !='27254'| LIDNUM !='27272'
+| LIDNUM !='29202'| LIDNUM !='29290'| LIDNUM !='29291'| LIDNUM !='28376'| LIDNUM !='28376'| LIDNUM !='28378'| LIDNUM !='28379'| LIDNUM !='28380'
+| LIDNUM !='28382'| LIDNUM !='28382'| LIDNUM !='28383'| LIDNUM !='28386'| LIDNUM !='24127'| LIDNUM !='24128'| LIDNUM !='29248'| LIDNUM !='29287'
+| LIDNUM !='24138'| LIDNUM !='29265'| LIDNUM !='23802'| LIDNUM !='29038'| LIDNUM !='29279'| LIDNUM !='24391'| LIDNUM !='28762'| LIDNUM !='23868'
+| LIDNUM !='26930'| LIDNUM !='29178'| LIDNUM !='27233'| LIDNUM !='27571'| LIDNUM !='24437'| LIDNUM !='29306'| LIDNUM !='28414'| LIDNUM !='24061'
+| LIDNUM !='29305'| LIDNUM !='28392'| LIDNUM !='28393'| LIDNUM !='29298'| LIDNUM !='27010'| LIDNUM !='28397'| LIDNUM !='27965'| LIDNUM !='28265'
+| LIDNUM !='22026'| LIDNUM !='24151'| LIDNUM !='27253'| LIDNUM !='27572'| LIDNUM !='23858'| LIDNUM !='23858'| LIDNUM !='28327'| LIDNUM !='28327'
+| LIDNUM !='28327'| LIDNUM !='26964'| LIDNUM !='27986'| LIDNUM !='24194'| LIDNUM !='24099'| LIDNUM !='28272'| LIDNUM !='24098'| LIDNUM !='28261'
+| LIDNUM !='24436'| LIDNUM !='27009'| LIDNUM !='24455'| LIDNUM !='24154'| LIDNUM !='24206'| LIDNUM !='29275'| LIDNUM !='22027'| LIDNUM !='24178'
+| LIDNUM !='28337'| LIDNUM !='22209'| LIDNUM !='24097'| LIDNUM !='24155'| LIDNUM !='23687'| LIDNUM !='23686'| LIDNUM !='23686'| LIDNUM !='23685'
+| LIDNUM !='23685'| LIDNUM !='23685'| LIDNUM !='23684'| LIDNUM !='23684'| LIDNUM !='23684'| LIDNUM !='23683'| LIDNUM !='23683'| LIDNUM !='23682'
+| LIDNUM !='23682'| LIDNUM !='23682'| LIDNUM !='28400'| LIDNUM !='23670'| LIDNUM !='28404'| LIDNUM !='28405'| LIDNUM !='28676'| LIDNUM !='23867'
+| LIDNUM !='23867'| LIDNUM !='23867'| LIDNUM !='26933'| LIDNUM !='22030'| LIDNUM !='24208'| LIDNUM !='26913'| LIDNUM !='26913'| LIDNUM !='26914'
+| LIDNUM !='26914'| LIDNUM !='26915'| LIDNUM !='26915'| LIDNUM !='26916'| LIDNUM !='27847'| LIDNUM !='24067'| LIDNUM !='24040'| LIDNUM !='29274'
+| LIDNUM !='23865'| LIDNUM !='24044'| LIDNUM !='24041'| LIDNUM !='24043'| LIDNUM !='26962'| LIDNUM !='24047'| LIDNUM !='29289'| LIDNUM !='29307'
+| LIDNUM !='26963'| LIDNUM !='24101'| LIDNUM !='23667'| LIDNUM !='24149'| LIDNUM !='26917'| LIDNUM !='29362'| LIDNUM !='29187'| LIDNUM !='27464'
+| LIDNUM !='28681'| LIDNUM !='28032'| LIDNUM !='24153'| LIDNUM !='23225'| LIDNUM !='28323'| LIDNUM !='29304'| LIDNUM !='29216'| LIDNUM !='29308'
+| LIDNUM !='29217'| LIDNUM !='24110'| LIDNUM !='29278'| LIDNUM !='23200'| LIDNUM !='24554'| LIDNUM !='29288'| LIDNUM !='29039'| LIDNUM !='24094'
+| LIDNUM !='24089'| LIDNUM !='24090'| LIDNUM !='24096'~ 'N'))
+
+#get time sliced version# 
+cenozoic <- export 
+plio_quart <- export %>% subset(export$MAX_AGE <5.3)
+pqhom <- plio_quart %>% subset(plio_quart$homo=='Y')
+quart <- export %>% subset(export$MAX_AGE <2.6)
+qhom <- quart %>% subset(quart$homo=='Y')
+ 
+library(ggplot2) 
+plot(x=export$LONG, y=export$LAT) 
+ggplot (data=cenozoic, mapping = aes(x=LONG, y=LAT, colour=homo))+ geom_point()+ 
+  scale_color_manual(values = c("Y" = "ORANGE", 'N'='Black')) 
+ 
+ggplot (data=plio_quart, mapping = aes(x=LONG, y=LAT, colour=homo))+ geom_point()+ 
+  scale_color_manual(values = c("Y" = "ORANGE", 'N'='Black'))  
+ 
+ggplot (data=quart, mapping = aes(x=LONG, y=LAT, colour=homo))+ geom_point()+ 
+  scale_color_manual(values = c("Y" = "ORANGE", 'N'='Black')) 
+ 
+##density maps## 
+library(eks)
+library(ggmap)
+library(raster)
+library(sf)
+
+#Convert to sf object 
+world.map <- map_data("world")
+world.map.plot <- ggplot() + geom_polygon(data=world.map, aes(x = long, y = lat, group=group), colour = "black",fill="white") + coord_map(xlim=c(-180,180)) + theme_void() + theme(panel.background = element_rect(fill = "#cfe0ec",size = 0.5, linetype = "solid",colour="white"))
+world.map.plot
+##cenozoic## 
+fossil.locs.ceno <- st_as_sf(cenozoic,coords=c('LONG', 'LAT'), crs=4326)
+homo.locs.ceno <- st_as_sf(homin,coords=c('LONG', 'LAT'),crs=4326)
+skde.ceno <- st_kde(homo.locs.ceno)
+
+density.plot.ceno <- world.map.plot+ geom_sf(data=st_get_contour(skde.ceno),aes(fill=contlabel),alpha=0.8) + geom_sf(data=fossil.locs.ceno, aes(col=homo))+ scale_fill_manual(values = c("#FFDCA2","#FD8F52","#C73866")) + labs(col='Hominini?')+ 
+  labs(fill="Density %") + theme(legend.position=c(0.15,0.35),legend.box.background = element_rect(fill="white",linetype = "solid",colour="black",size=0.5),legend.box.margin = margin(5,5,5,5),text = element_text(size=15))+scale_color_manual(values = c("Y" = "#e11c5b", 'N'='#615e5e'))
+density.plot.ceno 
+
+##plio +quart ## 
+fossil.locs.pq <- st_as_sf(plio_quart,coords=c('LONG', 'LAT'), crs=4326)
+homo.locs.pq <- st_as_sf(pqhom,coords=c('LONG', 'LAT'),crs=4326)
+skde.pq <- st_kde(homo.locs.pq)
+
+density.plot.pq <- world.map.plot+ geom_sf(data=st_get_contour(skde.pq),aes(fill=contlabel),alpha=0.8) + geom_sf(data=fossil.locs.pq, aes(col=homo))  + scale_fill_manual(values = c("#FFDCA2","#FD8F52","#C73866")) + labs(col='Hominini?')+
+  labs(fill="Density %") + theme(legend.position=c(0.15,0.35),legend.box.background = element_rect(fill="white",linetype = "solid",colour="black",size=0.5),legend.box.margin = margin(5,5,5,5),text = element_text(size=15))+scale_color_manual(values = c("Y" = "#e11c5b", 'N'='#615e5e'))
+density.plot.pq 
+
+##quart## 
+fossil.locs.q <- st_as_sf(quart,coords=c('LONG', 'LAT'), crs=4326)
+homo.locs.q <- st_as_sf(qhom,coords=c('LONG', 'LAT'),crs=4326)
+skde.q <- st_kde(homo.locs.q)
+
+density.plot.q <- world.map.plot+ geom_sf(data=st_get_contour(skde.q),aes(fill=contlabel),alpha=0.8) + geom_sf(data=fossil.locs.q, aes(col=homo))+ scale_fill_manual(values = c("#FFDCA2","#FD8F52","#C73866")) + labs(col='Hominini?')+
+  labs(fill="Density %") + theme(legend.position=c(0.15,0.35),legend.box.background = element_rect(fill="white",linetype = "solid",colour="black",size=0.5),legend.box.margin = margin(5,5,5,5),text = element_text(size=15))+scale_color_manual(values = c("Y" = "#e11c5b", 'N'='#615e5e'))
+density.plot.q  
+
+##invert the density plots- this makes the figures we used in the manuscript##  
+invert.ceno <- st_kde(fossil.locs.ceno)
+invertden.ceno <- world.map.plot+ geom_sf(data=st_get_contour(invert.ceno),aes(fill=contlabel),alpha=0.8) + geom_sf(data=homo.locs.ceno)+ scale_fill_manual(values = c("#efbbff","#b36bdd","#660066")) + 
+  labs(fill="Density %") + theme(legend.position=c(0.15,0.35),legend.box.background = element_rect(fill="white",linetype = "solid",colour="black",size=0.5),legend.box.margin = margin(5,5,5,5),text = element_text(size=15))
+fig1a <- invertden.ceno + labs(title = 'Cenozoic')
+  
+invert.pq <- st_kde(fossil.locs.pq)
+invertden.pq <- world.map.plot+ geom_sf(data=st_get_contour(invert.pq),aes(fill=contlabel),alpha=0.8) + geom_sf(data=homo.locs.pq)+ scale_fill_manual(values = c("#efbbff","#b36bdd","#660066")) + 
+  labs(fill="Density %") + theme(legend.position=c(0.15,0.35),legend.box.background = element_rect(fill="white",linetype = "solid",colour="black",size=0.5),legend.box.margin = margin(5,5,5,5),text = element_text(size=15))
+fig1b <-invertden.pq + labs(title='Pliocene & Quarternary')
+
+invert.q <- st_kde(fossil.locs.q)
+invertden.q <- world.map.plot+ geom_sf(data=st_get_contour(invert.q),aes(fill=contlabel),alpha=0.8) + geom_sf(data=homo.locs.q)+ scale_fill_manual(values = c("#efbbff","#b36bdd","#660066")) + 
+  labs(fill="Density %") + theme(legend.position=c(0.15,0.35),legend.box.background = element_rect(fill="white",linetype = "solid",colour="black",size=0.5),legend.box.margin = margin(5,5,5,5),text = element_text(size=15))
+fig1c <-invertden.q + labs(title='Quarternary') 
+
+
+## barplot ## this is all time/cenozoic#
+country.count <- export %>% count(COUNTRY)
+country.homo <- export %>% dplyr::select(c(7:8))  
+
+##
+country.homo <- country.homo %>% mutate(homo = case_when(homo=='Y'~1, homo=='N'~0 ))
+country.homo<- aggregate(country.homo$homo, by=list(country.homo$COUNTRY), FUN=sum) 
+country.homo <- country.homo %>% mutate(x= case_when(x >=1  ~ 'Y', x <1 ~'N'))
+##
+country.nhomo <- cbind(country.count, country.homo)
+country.nhomo <- country.nhomo %>% dplyr::select (-c(3))
+country.nhomo <-rename(country.nhomo, count=n)
+country.nhomo <-rename(country.nhomo, homo=x)  
+country.nhomo <- country.nhomo[order(country.nhomo$count), ] 
+#fix congo name --> Dem. Rep. of Congo, burma --> myanmar# 
+country.nhomo<-edit(country.nhomo) 
+
+barplot <- ggplot(data=country.nhomo, aes(x=reorder(COUNTRY,count), y=count, fill=homo))+ 
+  theme_bw()+
+  geom_bar(stat="identity") + 
+  scale_fill_manual(values = c('Y'='#e11c5b',"N" = "#b3d4ff")) +
+  theme(axis.text.x=element_text(size =8.5,angle=90, hjust = 1, vjust = 0.4))+ 
+  xlab('')+ylab('Number of Sites')+ 
+  labs(fill='Hominini Site(s)?')
+barplot 
+
+#barplot accounting for country area# 
+write.csv(country.nhomo,'./country_area.csv') 
+country.area <- read.csv('./cenoarea.csv')  
+country.area <- country.area %>% dplyr::select(c(3))
+country.coverage <- cbind(country.nhomo, country.area)
+#calculate coverage#
+country.coverage <-country.coverage %>% mutate(coverage= (count/area)*1000000)
+##remove netherlands antilles the little prick# 
+
+coverplot <- ggplot(data=country.coverage, aes(x=reorder(COUNTRY,coverage), y=coverage, fill=homo))+ 
+  theme_bw()+
+  geom_bar(stat="identity") + 
+  scale_fill_manual(values = c('Y'='#e11c5b',"N" = "#b3d4ff")) +
+  theme(axis.text.x=element_text(size =8.5,angle=90, hjust = 1, vjust = 0.4))+ 
+  xlab('')+ylab('Coverage of Sites (n of site/country area(km2)*1000000)')+ 
+  labs(fill='Hominini Site(s)?')
+coverplot  
+
+##coverage plots for quart & plio+quart##  
+
+##quart+ plio## 
+pq.count <- plio_quart %>% count(COUNTRY)
+pq.homo <- plio_quart %>% dplyr::select(c(7:8))  
+
+##
+pq.homo <- pq.homo %>% mutate(homo = case_when(homo=='Y'~1, homo=='N'~0 ))
+pq.homo<- aggregate(pq.homo$homo, by=list(pq.homo$COUNTRY), FUN=sum) 
+pq.homo <- pq.homo %>% mutate(x= case_when(x >=1  ~ 'Y', x <1 ~'N'))
+##
+pq.nhomo <- cbind(pq.count, pq.homo)
+pq.nhomo <- pq.nhomo %>% dplyr::select (-c(3))
+pq.nhomo <-rename(pq.nhomo, count=n)
+pq.nhomo <-rename(pq.nhomo, homo=x)  
+pq.nhomo <- pq.nhomo[order(pq.nhomo$count), ] 
+#fix congo name --> Dem. Rep. of Congo, burma --> myanmar# 
+pq.nhomo<-edit(pq.nhomo) 
+
+#barplot accounting for country area# 
+write.csv(pq.nhomo,'./pqcountryarea.csv') 
+pq.area <- read.csv('./pqarea.csv')  
+pq.area <- pq.area %>% dplyr::select(c(3))
+pq.coverage <- cbind(pq.nhomo, pq.area)
+#calculate coverage#
+pq.coverage <-pq.coverage %>% mutate(coverage= (count/area)*1000000)
+
+pqcover <- ggplot(data=pq.coverage, aes(x=reorder(COUNTRY,coverage), y=coverage, fill=homo))+ 
+  theme_bw()+
+  geom_bar(stat="identity") + 
+  scale_fill_manual(values = c('Y'='#e11c5b',"N" = "#b3d4ff")) +
+  theme(axis.text.x=element_text(size =8.5,angle=90, hjust = 1, vjust = 0.4))+ 
+  xlab('')+ylab('Coverage of Sites (n of site/country area(km2)*1000000)')+ 
+  labs(fill='Hominini Site(s)?')
+pqcover  
+
+pqbar <- ggplot(data=pq.nhomo, aes(x=reorder(COUNTRY,count), y=count, fill=homo))+ 
+  theme_bw()+
+  geom_bar(stat="identity") + 
+  scale_fill_manual(values = c('Y'='#e11c5b',"N" = "#b3d4ff")) +
+  theme(axis.text.x=element_text(size =8.5,angle=90, hjust = 1, vjust = 0.4))+ 
+  xlab('')+ylab('Number of Sites')+ 
+  labs(fill='Hominini Site(s)?')
+pqbar 
+
+##quart## 
+q.count <- quart %>% count(COUNTRY)
+q.homo <- quart %>% dplyr::select(c(7:8))  
+
+##
+q.homo <- q.homo %>% mutate(homo = case_when(homo=='Y'~1, homo=='N'~0 ))
+q.homo<- aggregate(q.homo$homo, by=list(q.homo$COUNTRY), FUN=sum) 
+q.homo <- q.homo %>% mutate(x= case_when(x >=1  ~ 'Y', x <1 ~'N'))
+##
+q.nhomo <- cbind(q.count, q.homo)
+q.nhomo <- q.nhomo %>% dplyr::select (-c(3))
+q.nhomo <-rename(q.nhomo, count=n)
+q.nhomo <-rename(q.nhomo, homo=x)  
+q.nhomo <- q.nhomo[order(q.nhomo$count), ] 
+#fix congo name --> Dem. Rep. of Congo, burma --> myanmar# 
+q.nhomo<-edit(q.nhomo) 
+
+#barplot accounting for country area # not used in manuscript # 
+write.csv(q.nhomo,'./qcountryarea.csv') 
+q.area <- read.csv('./qarea.csv')  
+q.area <- q.area %>% dplyr::select(c(3))
+q.coverage <- cbind(q.nhomo, q.area)
+#calculate coverage#
+q.coverage <-q.coverage %>% mutate(coverage= (count/area)*1000000)
+
+qcover <- ggplot(data=q.coverage, aes(x=reorder(COUNTRY,coverage), y=coverage, fill=homo))+ 
+  theme_bw()+
+  geom_bar(stat="identity") + 
+  scale_fill_manual(values = c('Y'='#e11c5b',"N" = "#b3d4ff")) +
+  theme(axis.text.x=element_text(size =8.5,angle=90, hjust = 1, vjust = 0.4))+ 
+  xlab('')+ylab('Coverage of Sites (n of site/country area(km2)*1000000)')+ 
+  labs(fill='Hominini Site(s)?')
+qcover   
+
+qbar <- ggplot(data=q.nhomo, aes(x=reorder(COUNTRY,count), y=count, fill=homo))+ 
+  theme_bw()+
+  geom_bar(stat="identity") + 
+  scale_fill_manual(values = c('Y'='#e11c5b',"N" = "#b3d4ff")) +
+  theme(axis.text.x=element_text(size =8.5,angle=90, hjust = 1, vjust = 0.4))+ 
+  xlab('')+ylab('Number of Sites')+ 
+  labs(fill='Hominini Site(s)?')
+qbar
+ 
+#Site density through time# 
+## calculate mean age#   
+export1 <- export1 %>% mutate (MEANAGE= (MAX_AGE+MIN_AGE)/2) 
+mean.age <- export1 %>% dplyr::select(c(1,8)) 
+age.bins <- mean.age %>% mutate(Ma = case_when (MEANAGE	>	0	&	MEANAGE	<=	1	~	1	,
+                                                MEANAGE	>	1	&	MEANAGE	<=	2	~	2	,
+                                                MEANAGE	>	2	&	MEANAGE	<=	3	~	3	,
+                                                MEANAGE	>	3	&	MEANAGE	<=	4	~	4	,
+                                                MEANAGE	>	4	&	MEANAGE	<=	5	~	5	,
+                                                MEANAGE	>	5	&	MEANAGE	<=	6	~	6	,
+                                                MEANAGE	>	6	&	MEANAGE	<=	7	~	7	,
+                                                MEANAGE	>	7	&	MEANAGE	<=	8	~	8	,
+                                                MEANAGE	>	8	&	MEANAGE	<=	9	~	9	,
+                                                MEANAGE	>	9	&	MEANAGE	<=	10	~	10	,
+                                                MEANAGE	>	10	&	MEANAGE	<=	11	~	11	,
+                                                MEANAGE	>	11	&	MEANAGE	<=	12	~	12	,
+                                                MEANAGE	>	12	&	MEANAGE	<=	13	~	13	,
+                                                MEANAGE	>	13	&	MEANAGE	<=	14	~	14	,
+                                                MEANAGE	>	14	&	MEANAGE	<=	15	~	15	,
+                                                MEANAGE	>	15	&	MEANAGE	<=	16	~	16	,
+                                                MEANAGE	>	16	&	MEANAGE	<=	17	~	17	,
+                                                MEANAGE	>	17	&	MEANAGE	<=	18	~	18	,
+                                                MEANAGE	>	18	&	MEANAGE	<=	19	~	19	,
+                                                MEANAGE	>	19	&	MEANAGE	<=	20	~	20	,
+                                                MEANAGE	>	20	&	MEANAGE	<=	21	~	21	,
+                                                MEANAGE	>	21	&	MEANAGE	<=	22	~	22	,
+                                                MEANAGE	>	22	&	MEANAGE	<=	23	~	23	,
+                                                MEANAGE	>	23	&	MEANAGE	<=	24	~	24	,
+                                                MEANAGE	>	24	&	MEANAGE	<=	25	~	25	,
+                                                MEANAGE	>	25	&	MEANAGE	<=	26	~	26	,
+                                                MEANAGE	>	26	&	MEANAGE	<=	27	~	27	,
+                                                MEANAGE	>	27	&	MEANAGE	<=	28	~	28	,
+                                                MEANAGE	>	28	&	MEANAGE	<=	29	~	29	,
+                                                MEANAGE	>	29	&	MEANAGE	<=	30	~	30	,
+                                                MEANAGE	>	30	&	MEANAGE	<=	31	~	31	,
+                                                MEANAGE	>	31	&	MEANAGE	<=	32	~	32	,
+                                                MEANAGE	>	32	&	MEANAGE	<=	33	~	33	,
+                                                MEANAGE	>	33	&	MEANAGE	<=	34	~	34	,
+                                                MEANAGE	>	34	&	MEANAGE	<=	35	~	35	,
+                                                MEANAGE	>	35	&	MEANAGE	<=	36	~	36	,
+                                                MEANAGE	>	36	&	MEANAGE	<=	37	~	37	,
+                                                MEANAGE	>	37	&	MEANAGE	<=	38	~	38	,
+                                                MEANAGE	>	38	&	MEANAGE	<=	39	~	39	,
+                                                MEANAGE	>	39	&	MEANAGE	<=	40	~	40	,
+                                                MEANAGE	>	40	&	MEANAGE	<=	41	~	41	,
+                                                MEANAGE	>	41	&	MEANAGE	<=	42	~	42	,
+                                                MEANAGE	>	42	&	MEANAGE	<=	43	~	43	,
+                                                MEANAGE	>	43	&	MEANAGE	<=	44	~	44	,
+                                                MEANAGE	>	44	&	MEANAGE	<=	45	~	45	,
+                                                MEANAGE	>	45	&	MEANAGE	<=	46	~	46	,
+                                                MEANAGE	>	46	&	MEANAGE	<=	47	~	47	,
+                                                MEANAGE	>	47	&	MEANAGE	<=	48	~	48	,
+                                                MEANAGE	>	48	&	MEANAGE	<=	49	~	49	,
+                                                MEANAGE	>	49	&	MEANAGE	<=	50	~	50	,
+                                                MEANAGE	>	50	&	MEANAGE	<=	51	~	51	,
+                                                MEANAGE	>	51	&	MEANAGE	<=	52	~	52	,
+                                                MEANAGE	>	52	&	MEANAGE	<=	53	~	53	,
+                                                MEANAGE	>	53	&	MEANAGE	<=	54	~	54	,
+                                                MEANAGE	>	54	&	MEANAGE	<=	55	~	55	,
+                                                MEANAGE	>	55	&	MEANAGE	<=	56	~	56	,
+                                                MEANAGE	>	56	&	MEANAGE	<=	57	~	57	,
+                                                MEANAGE	>	57	&	MEANAGE	<=	58	~	58	,
+                                                MEANAGE	>	58	&	MEANAGE	<=	59	~	59	,
+                                                MEANAGE	>	59	&	MEANAGE	<=	60	~	60	,
+                                                MEANAGE	>	60	&	MEANAGE	<=	61	~	61	,
+                                                MEANAGE	>	61	&	MEANAGE	<=	62	~	62	,
+                                                MEANAGE	>	62	&	MEANAGE	<=	63	~	63	,
+                                                MEANAGE	>	63	&	MEANAGE	<=	64	~	64	,
+                                                MEANAGE	>	64	&	MEANAGE	<=	65	~	65	,
+                                                MEANAGE	>	65	&	MEANAGE	<=	66	~	66))
+## counts of sites per Ma#  
+time.count <- age.bins %>% count(Ma)
+## colour by epoch##   
+timebar <- ggplot(data=time.count, aes(x=reorder(Ma,Ma), y=n))+ 
+  theme_bw()+
+  geom_bar(stat="identity") + 
+  xlab('Time')+ylab('Number of Sites') 
+timebar  
+ 
+#bin into epochs# 
+epoch.bins <- mean.age %>% mutate(epoch = case_when (MEANAGE	>	0	&	MEANAGE	<=	0.0120	~	'Holocene', 
+                                                  MEANAGE > 0.0120 & MEANAGE <=2.6 ~ 'Pleistocene', 
+                                                  MEANAGE > 2.6 & MEANAGE <=5.3 ~ 'Pliocene', 
+                                                  MEANAGE > 5.3 & MEANAGE <=23 ~ 'Miocene', 
+                                                  MEANAGE > 23 & MEANAGE <=34 ~ 'Oligocene', 
+                                                  MEANAGE > 34 & MEANAGE <=56 ~ 'Eocene', 
+                                                  MEANAGE > 56 & MEANAGE <=66 ~ 'Paleocene'))
+epoch <- epoch.bins%>% dplyr::select(c(3))
+epoch.count <- epoch.bins %>% count(epoch) 
+epoch.count <- epoch.count %>% mutate(epoch=fct_relevel(epoch, 'Holocene','Pleistocene','Pliocene','Miocene','Oligocene','Eocene','Paleocene'))
+epoch.count<- epoch.count[-c(8), ]  ##remove random extras# 
+epochbar <- ggplot(data=epoch.count, aes(x=epoch, y=n, fill=epoch))+  
+  theme_bw()+
+  theme(legend.position="none")+
+  geom_bar(stat="identity") + scale_fill_manual(values = c('Holocene'='#ffadad','Pleistocene' = "#ffd6a5" ,'Pliocene'='#fdffb6', 
+                                                           'Miocene'='#caffbf', 'Oligocene'='#9bf6ff','Eocene'='#a0c4ff','Paleocene'='#bdb2ff'))+
+  xlab('Epoch')+ylab('Number of Sites') 
+epochbar  
+
+#standardise by time# 
+epoch.count <- epoch.count %>% mutate (length= case_when(epoch=='Holocene'~0.012, epoch=='Pleistocene'~2.588,epoch=='Pliocene'~2.7,epoch=='Miocene'~17.7,epoch=='Oligocene'~11,epoch=='Eocene'~22,epoch=='Paleocene'~10))
+epoch.count <- epoch.count %>% mutate (stdcount= n/length) 
+epoch.count <- epoch.count %>% mutate(epoch=fct_relevel(epoch, 'Holocene','Pleistocene','Pliocene','Miocene','Oligocene','Eocene','Paleocene'))
+std.epochbar <- ggplot(data=epoch.count, aes(x=epoch, y=stdcount, fill=epoch))+  
+  theme_bw()+
+  theme(legend.position="none")+
+  geom_bar(stat="identity") + scale_fill_manual(values = c('Holocene'='#ffadad','Pleistocene' = "#ffd6a5" ,'Pliocene'='#fdffb6', 
+                                                           'Miocene'='#caffbf', 'Oligocene'='#9bf6ff','Eocene'='#a0c4ff','Paleocene'='#bdb2ff'))+
+  xlab('Epoch')+ylab('Number of Sites/Epoch Length') 
+std.epochbar 
+ 
+## density curve of sites over time # 
+density<-ggplot(mean.age, aes(x=MEANAGE))+ 
+  geom_density()  
+
+mean.age.epoch <- cbind(mean.age, epoch) 
+##remove random extras## 
+mean.age.epoch<- mean.age.epoch[-c(1861,4822), ]
+home_data <- mean.age.epoch %>% mutate(epoch = factor(epoch))
+ 
+timehisto <- ggplot(mean.age.epoch, aes(x=MEANAGE, y=after_stat(density)))+ 
+  geom_histogram(bins=66, colour='black', fill='white')+ 
+  geom_density(colour='#5d22e1')
+timehisto  
+
+timehisto2 <- ggplot(mean.age.epoch, aes(x=MEANAGE, fill=epoch))+ 
+  theme_bw()+
+  geom_histogram(bins=66, colour='black')+ 
+  scale_fill_manual(values = c('Holocene'='#ffadad','Pleistocene' = "#ffd6a5" ,'Pliocene'='#fdffb6', 
+                               'Miocene'='#caffbf', 'Oligocene'='#9bf6ff','Eocene'='#a0c4ff','Paleocene'='#bdb2ff'))+ 
+  xlab('Time(Ma)')+ylab('Number of Sites')+ 
+  labs(fill='Epoch')
+  
+timehisto2 + 
+  geom_vline(data=mean.age.epoch, aes(xintercept=0.8), show.legend=FALSE,linetype='dashed', size=0.75)+
+  geom_vline(data=mean.age.epoch, aes(xintercept=2.8), show.legend=FALSE,linetype='dashed', size=0.75)+
+  geom_vline(data=mean.age.epoch, aes(xintercept=4.2), show.legend=FALSE,linetype='dashed', size=0.75)+
+  geom_vline(data=mean.age.epoch, aes(xintercept=6.5), show.legend=FALSE,linetype='dashed', size=0.75)+
+  geom_vline(data=mean.age.epoch, aes(xintercept=21), show.legend=FALSE,linetype='dashed', size=0.75)+
+  geom_vline(data=mean.age.epoch, aes(xintercept=66), show.legend=FALSE,linetype='dashed', size=0.75)
+
+## sediment basins x locs ## 
+#Read in the data
+basin.mike <- read.delim("./ISEA3H09_SedimentaryBasins_V01_Structure_Fractions.txt")
+gridpoints <- read.csv("./All terrestrial gridpoints.csv")
+
+#joins and edits
+library(dplyr)
+basin.mike <- inner_join(gridpoints,basin.mike,by="HID")
+colnames(basin.mike)[2] <-"X"
+colnames(basin.mike)[3] <-"Y"
+basin.mike <- basin.mike %>% rowwise() %>%
+  mutate(basin.prop = sum(c_across(Extensional_Fraction:StrikeSlip_Fraction)))
+
+#plot
+library(ggnewscale) 
+library(ggplot2) 
+world.map <- map_data("world")
+world.map.plot <- ggplot() + geom_polygon(data=world.map, aes(x = long, y = lat, group=group), colour = "white",fill="white") + coord_maphttp://127.0.0.1:40025/graphics/17af4afb-c2a7-4510-b35c-b79a3bc576f9.png(xlim=c(-180,180)) + theme_void() + theme(panel.background = element_rect(fill = '#cfe0ec',size = 0.5, linetype = "solid",colour="white"))
+world.map.plot
+basins.plot <- world.map.plot + geom_point(data=basin.mike,aes(x=X,y=Y,colour=basin.prop)) + scale_colour_gradientn(colours=c("white","#FCC588"))
+basinsxloc <- basins.plot + new_scale_colour() + geom_point(data = export, aes(x=LONG, y=LAT, colour=homo),size=1.5,alpha=0.5) + scale_colour_manual(values=c("#b3d4ff",'#e11c5b'))
+basinsxloc
+basins.plot
