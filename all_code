@@ -458,7 +458,7 @@ basin.mike <- basin.mike %>% rowwise() %>%
 library(ggnewscale) 
 library(ggplot2) 
 world.map <- map_data("world")
-world.map.plot <- ggplot() + geom_polygon(data=world.map, aes(x = long, y = lat, group=group), colour = "white",fill="white") + coord_maphttp://127.0.0.1:40025/graphics/17af4afb-c2a7-4510-b35c-b79a3bc576f9.png(xlim=c(-180,180)) + theme_void() + theme(panel.background = element_rect(fill = '#cfe0ec',size = 0.5, linetype = "solid",colour="white"))
+world.map.plot <- ggplot() + geom_polygon(data=world.map, aes(x = long, y = lat, group=group), colour = "white",fill="white") + coord_map(xlim=c(-180,180)) + theme_void() + theme(panel.background = element_rect(fill = '#cfe0ec',size = 0.5, linetype = "solid",colour="white"))
 world.map.plot
 basins.plot <- world.map.plot + geom_point(data=basin.mike,aes(x=X,y=Y,colour=basin.prop)) + scale_colour_gradientn(colours=c("white","#FCC588"))
 basinsxloc <- basins.plot + new_scale_colour() + geom_point(data = export, aes(x=LONG, y=LAT, colour=homo),size=1.5,alpha=0.5) + scale_colour_manual(values=c("#b3d4ff",'#e11c5b'))
